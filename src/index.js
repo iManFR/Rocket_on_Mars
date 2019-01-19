@@ -10,6 +10,9 @@ import * as THREE from 'three'
 // Import Rocket Model
 import Rocket from './js/Rocket.js'
 
+// Import Rocket Model
+import Environement from './js/Environement.js'
+
 
 /**
  * Cursor
@@ -23,6 +26,17 @@ window.addEventListener('mousemove', (_event) =>
     cursor.x = _event.clientX / sizes.width - 0.5
     cursor.y = _event.clientY / sizes.height - 0.5
 })
+
+
+/**
+ * Controls
+ */
+/*const controls = new THREE.OrbitControls( camera, renderer.domElement );
+controls.userPan = false;
+controls.userPanSpeed = 0.0;
+controls.maxDistance = 5000.0;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 5.0;*/
 
 
 /**
@@ -57,7 +71,7 @@ window.addEventListener('resize', () =>
  * Camera
  */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-camera.position.z = 10
+camera.position.z = 15
 scene.add(camera)
 
 
@@ -91,6 +105,11 @@ const textureLoader = new THREE.TextureLoader()
 const rocket = new Rocket({ textureLoader: textureLoader })
 scene.add(rocket.container)
 
+/**
+ * Environement
+ */
+const environement = new Environement({ textureLoader: textureLoader })
+scene.add(environement.container)
 
 /**
  * Renderer
@@ -112,6 +131,9 @@ const loop = () =>
     camera.position.x = cursor.x * 20
     camera.position.y = - cursor.y * 20
     camera.lookAt(new THREE.Vector3())
+
+    // Update Orbit Controls
+    /*controls.update();*/
 
     // Renderer
     renderer.render(scene, camera)
