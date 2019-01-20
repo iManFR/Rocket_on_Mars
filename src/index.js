@@ -7,11 +7,16 @@ import './css/style.styl'
 //Import Three.js
 import * as THREE from 'three'
 
+import {MTLLoader, OBJLoader} from 'three-obj-mtl-loader'
+
 // Import Rocket Model
 import Rocket from './js/Rocket.js'
 
+// Import Environment
+import Environment from './js/Environment.js'
+
 // Import Rocket Model
-import Environement from './js/Environement.js'
+//import Shuttle from './js/Shuttle.js'
 
 
 /**
@@ -71,17 +76,17 @@ window.addEventListener('resize', () =>
  * Camera
  */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-camera.position.z = 15
+camera.position.z = 60
 scene.add(camera)
 
 
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.2)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
 scene.add(ambientLight)
 
-const sunLight = new THREE.DirectionalLight(0xffcccc, 1.2)
+const sunLight = new THREE.DirectionalLight(0xffcccc, 1.8)
 sunLight.castShadow = true
 sunLight.shadow.camera.top = 1.20
 sunLight.shadow.camera.right = 1.20
@@ -102,14 +107,23 @@ const textureLoader = new THREE.TextureLoader()
 /**
  * Rocket
  */
-const rocket = new Rocket({ textureLoader: textureLoader })
-scene.add(rocket.container)
+/*const rocket = new Rocket({ textureLoader: textureLoader })
+scene.add(rocket.container)*/
+
+
+/**
+ * Shuttle
+ */
+/*const shuttle = new Shuttle()
+scene.add(shuttle)*/
+
 
 /**
  * Environement
  */
-const environement = new Environement({ textureLoader: textureLoader })
-scene.add(environement.container)
+const environment = new Environment({ textureLoader: textureLoader })
+scene.add(environment.container)
+
 
 /**
  * Renderer
@@ -128,8 +142,8 @@ const loop = () =>
     window.requestAnimationFrame(loop)
 
     // Update camera
-    camera.position.x = cursor.x * 20
-    camera.position.y = - cursor.y * 20
+    camera.position.x = cursor.x * 60
+    camera.position.y = - cursor.y * 60
     camera.lookAt(new THREE.Vector3())
 
     // Update Orbit Controls
@@ -153,3 +167,17 @@ if(module.hot)
         
     })
 }
+
+
+const mtlLoader = new MTLLoader()
+
+const objLoader = new OBJLoader()
+
+mtlLoader.load('SpaceShuttle.mtl', (materials) => {
+    materials.preload()
+    objLoader.setMaterials(materials)
+    objLoader.load('SpaceShuttle.obj', (shuttle) => {
+        shuttle.rotation.x = - (Math.PI / 2)
+        scene.add(shuttle)
+    })
+})
